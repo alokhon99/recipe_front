@@ -10,10 +10,10 @@ const App = () => {
         <Router>
             <div className="App">
                 <header>
-                    <h1>Recipe Manager</h1>
+                    <h1>Retsept Menejer</h1>
                     <nav>
-                        <Link to="/">Home</Link>
-                        <Link to="/create-recipe">Add Recipe</Link>
+                        <Link to="/">Bosh sahifa</Link>
+                        <Link to="/create-recipe">Retsept qo'shish</Link>
                     </nav>
                 </header>
                 <main>

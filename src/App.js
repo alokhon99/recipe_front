@@ -23,9 +23,6 @@ const App = () => {
                         <Route path="/create-recipe" element={<CreateRecipe />} />
                     </Routes>
                 </main>
-                <footer>
-                    <p>&copy; 2024 Recipe Manager</p>
-                </footer>
             </div>
         </Router>
     );

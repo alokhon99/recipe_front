@@ -1,0 +1,31 @@
+.meal-group-dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.meal-group {
+    text-decoration: none;
+    color: black;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.meal-group:hover {
+    transform: translateY(-5px);
+}
+
+.meal-group img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px 10px 0 0;
+}
+
+.meal-group h2 {
+    padding: 15px;
+    margin: 0;
+    font-size: 1.2rem;
+    background-color: #f9f9f9;
+}

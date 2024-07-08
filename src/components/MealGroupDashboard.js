@@ -1,7 +1,7 @@
-// src/components/MealGroupDashboard.js
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import './MealGroupDashboard.css';
 
 const MealGroupDashboard = () => {
     const [mealGroups, setMealGroups] = useState([]);

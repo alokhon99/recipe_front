@@ -1,81 +1,52 @@
-/* src/App.css */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+}
+
 .App {
-  font-family: Arial, sans-serif;
   text-align: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
 }
 
 header {
   background-color: #4CAF50;
+  padding: 20px;
   color: white;
-  padding: 10px 0;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  margin-bottom: 20px;
 }
 
-nav a {
-  margin: 0 10px;
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+header nav {
+  margin-top: 10px;
+}
+
+header nav a {
   color: white;
   text-decoration: none;
+  padding: 10px 20px;
+  margin: 0 10px;
+  border-radius: 5px;
+  background-color: #45a049;
+  transition: background-color 0.3s ease;
+}
+
+header nav a:hover {
+  background-color: #3e8e41;
 }
 
 main {
   padding: 20px;
-}
-
-.meal-group-dashboard, .recipe-dashboard {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 10px;
-}
-
-.meal-group, .recipe {
-  border: 1px solid #ddd;
-  padding: 10px;
-  border-radius: 5px;
-  background-color: white;
-  text-align: left;
-}
-
-.meal-group img {
-  width: 100%;
-  height: auto;
-  border-radius: 5px;
-}
-
-.add-recipe-btn {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: white;
-  text-decoration: none;
-  border-radius: 5px;
-  margin-top: 20px;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-form input, form select {
-  margin: 10px 0;
-  padding: 10px;
-  width: 80%;
-  max-width: 400px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-}
-
-form button {
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-footer {
-  margin-top: 20px;
-  padding: 10px 0;
-  background-color: #f1f1f1;
 }

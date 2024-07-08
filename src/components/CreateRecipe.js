@@ -1,113 +1,105 @@
+// src/components/CreateRecipe.js
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const CreateRecipe = () => {
-    const [categories, setCategories] = useState([]);
-    const [ingredients, setIngredients] = useState([]);
-    const [actions, setActions] = useState([]);
-    const [recipe, setRecipe] = useState({
-        title: '',
-        meal_group: '',
-        meal_ingredients: [{ ingredient: '', quantity: '' }],
-        meal_actions: [{ ingredient: '', action: '', duration: '' }],
-    });
+    const [title, setTitle] = useState('');
+    const [mealGroups, setMealGroups] = useState([]);
+    const [selectedMealGroup, setSelectedMealGroup] = useState('');
+    const [mealIngredients, setMealIngredients] = useState([{ ingredient: '', quantity: '' }]);
+    const [mealActions, setMealActions] = useState([{ action: '', ingredient: '', duration: '' }]);
 
     useEffect(() => {
-        fetch('https://alokhont.pythonanywhere.com/api/meal_groups/')
-            .then(response => response.json())
-            .then(data => setCategories(data))
-            .catch(error => console.error('Error fetching categories:', error));
-
-        fetch('https://alokhont.pythonanywhere.com/api/ingredients/')
-            .then(response => response.json())
-            .then(data => setIngredients(data))
-            .catch(error => console.error('Error fetching ingredients:', error));
-
-        fetch('https://alokhont.pythonanywhere.com/api/actions/')
-            .then(response => response.json())
-            .then(data => setActions(data))
-            .catch(error => console.error('Error fetching actions:', error));
+        axios.get('https://alokhont.pythonanywhere.com/api/meal_groups/')
+            .then(response => {
+                setMealGroups(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching meal groups:', error);
+            });
     }, []);
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setRecipe({ ...recipe, [name]: value });
-    };
-
-    const handleIngredientChange = (index, e) => {
-        const { name, value } = e.target;
-        const meal_ingredients = [...recipe.meal_ingredients];
-        meal_ingredients[index][name] = value;
-        setRecipe({ ...recipe, meal_ingredients });
-    };
-
-    const handleActionChange = (index, e) => {
-        const { name, value } = e.target;
-        const meal_actions = [...recipe.meal_actions];
-        meal_actions[index][name] = value;
-        setRecipe({ ...recipe, meal_actions });
-    };
-
-    const addIngredient = () => {
-        setRecipe({ ...recipe, meal_ingredients: [...recipe.meal_ingredients, { ingredient: '', quantity: '' }] });
-    };
-
-    const addAction = () => {
-        setRecipe({ ...recipe, meal_actions: [...recipe.meal_actions, { ingredient: '', action: '', duration: '' }] });
-    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        fetch('https://alokhont.pythonanywhere.com/api/recipes/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(recipe),
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Recipe created:', data);
-                // Handle success, maybe redirect to another page or reset form
+        const newRecipe = {
+            title,
+            meal_group: selectedMealGroup,
+            meal_ingredients: mealIngredients,
+            meal_actions: mealActions,
+        };
+
+        axios.post('https://alokhont.pythonanywhere.com/api/recipes/', newRecipe)
+            .then(response => {
+                console.log('Recipe created:', response.data);
             })
-            .catch(error => console.error('Error creating recipe:', error));
+            .catch(error => {
+                console.error('Error creating recipe:', error);
+            });
+    };
+
+    const addIngredient = () => {
+        setMealIngredients([...mealIngredients, { ingredient: '', quantity: '' }]);
+    };
+
+    const addAction = () => {
+        setMealActions([...mealActions, { action: '', ingredient: '', duration: '' }]);
+    };
+
+    const handleIngredientChange = (index, e) => {
+        const newIngredients = mealIngredients.map((ingredient, i) => {
+            if (i === index) {
+                return { ...ingredient, [e.target.name]: e.target.value };
+            }
+            return ingredient;
+        });
+        setMealIngredients(newIngredients);
+    };
+
+    const handleActionChange = (index, e) => {
+        const newActions = mealActions.map((action, i) => {
+            if (i === index) {
+                return { ...action, [e.target.name]: e.target.value };
+            }
+            return action;
+        });
+        setMealActions(newActions);
     };
 
     return (
         <div className="create-recipe">
             <h2>Create Recipe</h2>
             <form onSubmit={handleSubmit}>
+                <input
+                    type="text"
+                    name="title"
+                    placeholder="Recipe Title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                />
+                <select
+                    name="meal_group"
+                    value={selectedMealGroup}
+                    onChange={(e) => setSelectedMealGroup(e.target.value)}
+                    required
+                >
+                    <option value="">Select Meal Group</option>
+                    {mealGroups.map((group) => (
+                        <option key={group.id} value={group.id}>{group.name}</option>
+                    ))}
+                </select>
                 <div>
-                    <label>Title:</label>
-                    <input type="text" name="title" value={recipe.title} onChange={handleInputChange} required />
-                </div>
-                <div>
-                    <label>Category:</label>
-                    <select name="meal_group" value={recipe.meal_group} onChange={handleInputChange} required>
-                        <option value="">Select Category</option>
-                        {categories.map(category => (
-                            <option key={category.id} value={category.id}>
-                                {category.name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div>
-                    <label>Ingredients:</label>
-                    {recipe.meal_ingredients.map((ingredient, index) => (
+                    <h3>Ingredients</h3>
+                    {mealIngredients.map((ingredient, index) => (
                         <div key={index}>
-                            <select
+                            <input
+                                type="text"
                                 name="ingredient"
+                                placeholder="Ingredient"
                                 value={ingredient.ingredient}
                                 onChange={(e) => handleIngredientChange(index, e)}
                                 required
-                            >
-                                <option value="">Select Ingredient</option>
-                                {ingredients.map(ing => (
-                                    <option key={ing.id} value={ing.id}>
-                                        {ing.name}
-                                    </option>
-                                ))}
-                            </select>
+                            />
                             <input
                                 type="text"
                                 name="quantity"
@@ -121,35 +113,25 @@ const CreateRecipe = () => {
                     <button type="button" onClick={addIngredient}>Add Ingredient</button>
                 </div>
                 <div>
-                    <label>Actions:</label>
-                    {recipe.meal_actions.map((action, index) => (
+                    <h3>Actions</h3>
+                    {mealActions.map((action, index) => (
                         <div key={index}>
-                            <select
-                                name="ingredient"
-                                value={action.ingredient}
-                                onChange={(e) => handleActionChange(index, e)}
-                                required
-                            >
-                                <option value="">Select Ingredient</option>
-                                {ingredients.map(ing => (
-                                    <option key={ing.id} value={ing.id}>
-                                        {ing.name}
-                                    </option>
-                                ))}
-                            </select>
-                            <select
+                            <input
+                                type="text"
                                 name="action"
+                                placeholder="Action"
                                 value={action.action}
                                 onChange={(e) => handleActionChange(index, e)}
                                 required
-                            >
-                                <option value="">Select Action</option>
-                                {actions.map(act => (
-                                    <option key={act.id} value={act.id}>
-                                        {act.name}
-                                    </option>
-                                ))}
-                            </select>
+                            />
+                            <input
+                                type="text"
+                                name="ingredient"
+                                placeholder="Ingredient"
+                                value={action.ingredient}
+                                onChange={(e) => handleActionChange(index, e)}
+                                required
+                            />
                             <input
                                 type="text"
                                 name="duration"
